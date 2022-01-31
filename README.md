@@ -1,6 +1,6 @@
 # GameNotAMinesweeper
 
-В репо 3 файла:
+В репо 4 файла:
 1. Этот файл README
 2. GameObject.java (шаблон для элементов игры)
 3. Minesweeper.java (мой код игры)
