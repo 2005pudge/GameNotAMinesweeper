@@ -18,25 +18,16 @@ public class MinesweeperGame extends Game {
 
     @Override
     public void initialize() {
+        // аналог метода main, создаём игровое поле и запускаем игру
         setScreenSize(SIDE, SIDE);
         createGame();
-    }
-
-    @Override
-    public void onMouseLeftClick(int x, int y) {
-        if (isGameStopped) restart();
-        else openTile(x, y);
-    }
-
-    @Override
-    public void onMouseRightClick(int x, int y) {
-        markTile(x, y);
     }
 
     private void createGame() {
         for (int y = 0; y < SIDE; y++) {
             for (int x = 0; x < SIDE; x++) {
                 boolean isMine = getRandomNumber(10) < 1;
+                // выше определяем шанс создать мину
                 if (isMine) {
                     countMinesOnField++;
                 }
@@ -47,6 +38,19 @@ public class MinesweeperGame extends Game {
         }
         countMineNeighbors();
         countFlags = countMinesOnField;
+    }
+
+    @Override
+    public void onMouseLeftClick(int x, int y) {
+        // на ЛКМ открываем клеточки или перезапуск после проигрыша
+        if (isGameStopped) restart();
+        else openTile(x, y);
+    }
+
+    @Override
+    public void onMouseRightClick(int x, int y) {
+        // на ПКМ помечаем клетки как потенц. мины
+        markTile(x, y);
     }
 
     private List<GameObject> getNeighbors(GameObject gameObject) {
@@ -63,6 +67,7 @@ public class MinesweeperGame extends Game {
                     continue;
                 }
                 result.add(gameField[y][x]);
+                // подсчитываем соседей для клетки-аргумента
             }
         }
         return result;
@@ -74,6 +79,7 @@ public class MinesweeperGame extends Game {
                 if (!gameField[i][j].isMine) {
                     for (GameObject gameObject1 : getNeighbors(gameField[i][j])) {
                         if (gameObject1.isMine) gameField[i][j].countMineNeighbors++;
+                        // тут определяем количество мин по соседству с клеткой
                     }
                 }
             }
@@ -90,6 +96,7 @@ public class MinesweeperGame extends Game {
                 setCellColor(x, y, Color.PINK);
                 gameField[y][x].isOpen = true;
                 score += 5;
+                // за успешно открытую клетку добавляем 5 очей
                 setScore(score);
                 countClosedTiles--;
                 if (countClosedTiles == countMinesOnField) win();
